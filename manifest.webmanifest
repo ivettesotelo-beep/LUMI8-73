@@ -1,0 +1,18 @@
+{
+  "name": "LUMI - Compañero virtual",
+  "short_name": "LUMI",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#21183d",
+  "theme_color": "#21183d",
+  "description": "Tu compañero virtual tierno, curioso y divertido.",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
