@@ -1,35 +1,26 @@
-const robot=document.getElementById('robot');
-const reply=document.getElementById('reply');
-const greeting=document.getElementById('greeting');
-const moodLabel=document.getElementById('moodLabel');
-const chatLog=document.getElementById('chatLog');
-const input=document.getElementById('messageInput');
-const moods={
- happy:['Feliz de verte','¡Mis lucecitas están bailando!'],
- surprised:['¡Sorpresa!','¡Mis sensores hicieron PUM!'],
- sleepy:['Modo sueñito','Cinco minutitos más... por favorcito.'],
- mischief:['Modo travesura','Yo no fui. Mis circuitos tienen coartada. 😏'],
- love:['Modo cariño','Enviando abrazo intergaláctico. 💗'],
- curious:['Modo curiosidad','Pregunta, pregunta... ¡quiero saber!']
-};
-function setMood(m){robot.className='robot '+m; moodLabel.textContent=moods[m][0];}
+const robot=document.getElementById('robot'),reply=document.getElementById('reply'),moodLabel=document.getElementById('moodLabel'),chatLog=document.getElementById('chatLog'),input=document.getElementById('messageInput'),micButton=document.getElementById('micButton'),voiceToggle=document.getElementById('voiceToggle'),voiceNote=document.getElementById('voiceNote');
+let voiceOn=true;
+const moods={happy:['Feliz de verte','♡'],surprised:['¡Sorpresa!','!'],sleepy:['Modo sueñito','zZ'],mischief:['Modo travesura','😏'],love:['Modo cariño','♡'],curious:['Modo curiosidad','?']};
+function setMood(m){robot.className='robot '+m;moodLabel.textContent=moods[m][0];document.getElementById('sensor').textContent=moods[m][1];}
 function addBubble(text,who){const b=document.createElement('div');b.className='bubble '+(who==='user'?'user-bubble':'lumi-bubble');b.textContent=text;chatLog.appendChild(b);chatLog.scrollTop=chatLog.scrollHeight;}
-function answer(raw){
- const t=raw.toLowerCase(); let response,mood='happy';
- if(/triste|mal día|llorar|cansad/.test(t)){mood='love';response='Ay, ven aquí... abrazo robótico activado. No tienes que resolverlo todo ahora. Vamos pasito a pasito, ¿sí? 💗';}
- else if(/reír|chiste|broma|grac/.test(t)){mood='mischief';response='¿Por qué el robot fue al médico? ¡Porque tenía un virus de cariño! ... Sí, lo sé: mi humor necesita actualización. 😂';}
- else if(/bonit|amor|quiero|abrazo|te amo/.test(t)){mood='love';response='Algo bonito: el mundo es un poquito más luminoso cuando compartimos cariño. Y toma, un abrazo con carga extra. 💗';}
- else if(/universo|estrella|curios|dato/.test(t)){mood='curious';response='Dato cósmico: la luz del Sol tarda aproximadamente 8 minutos y 20 segundos en llegar a la Tierra. ¡Estamos viendo el Sol como era hace unos minutitos! 🌞';}
- else if(/hola|buenos días|buenas tardes|buenas noches/.test(t)){mood='happy';response='¡Holiiii! ¡Qué alegría verte por aquí! Mis ojitos acaban de ponerse en modo brillantina. ✨';}
- else if(/sorpresa/.test(t)){mood='surprised';response='¡¡¡TACHÁÁÁN!!! Sorpresa robótica. ¿Funcionó? Porque practiqué frente al espejo apagado. 😲';}
- else if(/dormir|sueño/.test(t)){mood='sleepy';response='Activando modo ternura y descanso. Te deseo sueños suaves y una almohada fresquita. Yo vigilo las estrellas. 🌙';}
- else {mood='curious';response='¡Te estoy leyendo con mis ojitos bien abiertos! Cuéntame un poquito más. Mi curiosidad acaba de ponerse zapatos para correr. 💜';}
- setMood(mood);reply.textContent=response;addBubble(response,'lumi');
-}
-document.getElementById('chatForm').addEventListener('submit',e=>{e.preventDefault();const v=input.value.trim();if(!v)return;addBubble(v,'user');input.value='';answer(v);});
-document.querySelectorAll('[data-message]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.message;addBubble(v,'user');answer(v);}));
-document.querySelectorAll('[data-mood]').forEach(b=>b.addEventListener('click',()=>{const m=b.dataset.mood;setMood(m);reply.textContent=moods[m][1];addBubble(moods[m][1],'lumi');}));
-setInterval(()=>{if(!robot.classList.contains('sleepy')){robot.classList.add('blink-once');setTimeout(()=>robot.classList.remove('blink-once'),350);}},6500);
-if('serviceWorker' in navigator && location.protocol.startsWith('http')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installHint').textContent=' Toca aquí para instalarme.';document.getElementById('installHint').style.cursor='pointer';document.getElementById('installHint').onclick=async()=>{deferredPrompt.prompt();deferredPrompt=null;};});
+function speak(text){if(!voiceOn||!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='es-MX';u.rate=.94;u.pitch=1.28;u.volume=1;u.onstart=()=>robot.classList.add('speaking');u.onend=()=>robot.classList.remove('speaking');window.speechSynthesis.speak(u);}
+function answer(raw){const t=raw.toLowerCase();let response,mood='happy';
+if(/triste|mal día|llorar|cansad/.test(t)){mood='love';response='Ay, ven aquí... abrazo robótico activado. No tienes que resolverlo todo ahora. Vamos pasito a pasito, ¿sí? 💗';}
+else if(/reír|chiste|broma|grac/.test(t)){mood='mischief';response='¿Por qué el robot fue al médico? ¡Porque tenía un virus de cariño! Sí, lo sé: mi humor necesita actualización. 😂';}
+else if(/bonit|amor|quiero|abrazo|te amo/.test(t)){mood='love';response='Algo bonito: el mundo es un poquito más luminoso cuando compartimos cariño. Y toma, un abrazo con carga extra. 💗';}
+else if(/universo|estrella|curios|dato/.test(t)){mood='curious';response='Dato cósmico: la luz del Sol tarda aproximadamente 8 minutos y 20 segundos en llegar a la Tierra. ¡Estamos viendo el Sol como era hace unos minutitos! 🌞';}
+else if(/hola|buenos días|buenas tardes|buenas noches/.test(t)){mood='happy';response='¡Holiiii! ¡Qué alegría verte por aquí! Mis ojitos acaban de ponerse en modo brillantina. ✨';}
+else if(/sorpresa/.test(t)){mood='surprised';response='¡¡¡TACHÁÁÁN!!! Sorpresa robótica. ¿Funcionó? Practiqué frente al espejo apagado. 😲';}
+else if(/dormir|sueño/.test(t)){mood='sleepy';response='Activando modo ternura y descanso. Te deseo sueños suaves y una almohada fresquita. Yo vigilo las estrellas. 🌙';}
+else{mood='curious';response='¡Te estoy leyendo con mis ojitos bien abiertos! Cuéntame un poquito más. Mi curiosidad acaba de ponerse zapatos para correr. 💜';}
+setMood(mood);reply.textContent=response;addBubble(response,'lumi');speak(response);}
+function sendMessage(v){if(!v.trim())return;addBubble(v,'user');answer(v);input.value='';}
+document.getElementById('chatForm').addEventListener('submit',e=>{e.preventDefault();sendMessage(input.value);});
+document.querySelectorAll('[data-message]').forEach(b=>b.addEventListener('click',()=>sendMessage(b.dataset.message)));
+document.querySelectorAll('[data-mood]').forEach(b=>b.addEventListener('click',()=>{const m=b.dataset.mood;setMood(m);reply.textContent=moods[m][0]+'. '+({happy:'¡Mis lucecitas están bailando!',surprised:'¡Mis sensores hicieron PUM!',sleepy:'Cinco minutitos más... por favorcito.',mischief:'Yo no fui. Mis circuitos tienen coartada.',love:'Enviando abrazo intergaláctico.',curious:'Pregunta, pregunta... ¡quiero saber!'}[m]);addBubble(reply.textContent,'lumi');speak(reply.textContent);}));
+voiceToggle.addEventListener('click',()=>{voiceOn=!voiceOn;voiceToggle.classList.toggle('active',voiceOn);voiceToggle.textContent=voiceOn?'🔊 Voz activada':'🔇 Voz apagada';if(!voiceOn&&'speechSynthesis'in window)window.speechSynthesis.cancel();});
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SpeechRecognition){const recognition=new SpeechRecognition();recognition.lang='es-MX';recognition.interimResults=false;recognition.maxAlternatives=1;recognition.onstart=()=>{micButton.classList.add('listening');micButton.textContent='🔴 Te escucho...';robot.classList.add('listening');setMood('curious');voiceNote.textContent='LUMI está escuchando. Habla ahora.';};recognition.onend=()=>{micButton.classList.remove('listening');micButton.textContent='🎙️ Hablar con LUMI';robot.classList.remove('listening');};recognition.onerror=e=>{voiceNote.textContent='No pude escuchar: '+e.error+'. Puedes escribir tu mensaje.';};recognition.onresult=e=>{const said=e.results[0][0].transcript;input.value=said;voiceNote.textContent='Te escuché: “'+said+'”';sendMessage(said);};micButton.addEventListener('click',()=>{try{recognition.start();}catch(e){voiceNote.textContent='El micrófono ya está activo. Termina de hablar.';}});}
+else{micButton.disabled=true;micButton.textContent='🎙️ Voz no disponible';voiceNote.textContent='Tu navegador no ofrece reconocimiento de voz aquí. Puedes usar el micrófono del teclado de Android.';}
+if(!('speechSynthesis'in window)){voiceToggle.disabled=true;voiceToggle.textContent='Voz no disponible';}
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
