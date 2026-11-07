@@ -1,4 +1,3 @@
-
 const robot = document.getElementById('robot');
 const reply = document.getElementById('reply');
 const moodLabel = document.getElementById('moodLabel');
@@ -116,9 +115,9 @@ function answer(raw) {
   } else if (/\b(hola|buenos dias|buenas tardes|buenas noches|que tal|como estas)\b/.test(t)) {
     mood = 'happy';
     response = pick([
-      '¡Holiiii! ¡Qué alegría verte! Mis ojitos acaban de encenderse en modo fiesta. ✨',
-      '¡Bip bip! Aquí LUMI, listo para conversar, aprender y hacer alguna travesura pequeñita. ¿Cómo va tu día?',
-      '¡Hola, humana bonita! Mi corazón luminoso acaba de dar un saltito. ¿Qué hacemos hoy?'
+      'Qué alegría coincidir contigo. Que hoy la vida te regale una razón bonita para sonreír. 💜',
+      '¡Hola! Que la luz de este instante te recuerde lo especial que es estar aquí y comenzar algo bonito. ✨',
+      'Me alegra que estés aquí. Hagamos de este ratito un pequeño universo de sonrisas. 💗'
     ]);
   } else if (/\b(dormir|sueno|descansar|buenas noches)\w*/.test(t)) {
     mood = 'sleepy';
