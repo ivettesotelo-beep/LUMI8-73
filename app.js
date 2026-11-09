@@ -171,7 +171,7 @@ async function sendMessage(v) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: value })
+        body: JSON.stringify({ message: value + "\n\nResponde de forma breve y directa: máximo 2 o 3 frases cortas, aproximadamente 50 palabras. Da primero la respuesta concreta. No agregues preguntas ni explicaciones adicionales salvo que sean necesarias o te las pidan." })
       }
     );
 
@@ -255,6 +255,16 @@ voiceToggle.addEventListener('click', () => {
     window.speechSynthesis.cancel();
   }
 });
+
+// Detener la voz de LUMI inmediatamente.
+const stopSpeakingButton = document.getElementById('stopSpeaking');
+if (stopSpeakingButton) {
+  stopSpeakingButton.addEventListener('click', () => {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    robot.classList.remove('speaking');
+    voiceNote.textContent = 'De acuerdo, hago una pausa. 💜';
+  });
+}
 
 // Reconocimiento de voz.
 const SpeechRecognition =
