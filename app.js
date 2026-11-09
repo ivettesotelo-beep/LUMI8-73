@@ -322,3 +322,110 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });
 }
+
+
+/* LUMI · Mi Universo Personal: funciones locales y servicios públicos */
+(() => {
+  const $ = id => document.getElementById(id);
+  const now = new Date();
+  const fmt = new Intl.DateTimeFormat('es-MX',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  if ($('todayDate')) $('todayDate').textContent = new Intl.DateTimeFormat('es-MX',{day:'numeric',month:'long'}).format(now);
+  if ($('todayFullDate')) $('todayFullDate').textContent = fmt.format(now);
+  const key = `${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const events = {
+    '01-01':'Año Nuevo: una oportunidad para comenzar nuevos proyectos.',
+    '02-05':'México conmemora la promulgación de la Constitución de 1917.',
+    '02-11':'Día Internacional de la Mujer y la Niña en la Ciencia.',
+    '03-08':'Día Internacional de las Mujeres.',
+    '03-21':'Natalicio de Benito Juárez (1806) y Día Internacional de la Eliminación de la Discriminación Racial.',
+    '04-22':'Día Internacional de la Madre Tierra.',
+    '05-01':'Día Internacional de las Personas Trabajadoras.',
+    '05-05':'Conmemoración de la Batalla de Puebla de 1862.',
+    '06-05':'Día Mundial del Medio Ambiente.',
+    '06-28':'Día Internacional del Orgullo LGBTQIA+.',
+    '07-30':'Día Mundial contra la Trata de Personas.',
+    '08-12':'Día Internacional de la Juventud.',
+    '09-15':'En México se conmemora el inicio de las celebraciones de la Independencia.',
+    '09-16':'Aniversario del inicio de la Independencia de México, en 1810.',
+    '10-11':'Día Internacional de la Niña.',
+    '10-12':'Día de la Nación Pluricultural en México.',
+    '11-02':'Día de Muertos: tradición mexicana de memoria y homenaje.',
+    '11-20':'Aniversario del inicio de la Revolución Mexicana, en 1910.',
+    '11-25':'Día Internacional de la Eliminación de la Violencia contra la Mujer.',
+    '12-10':'Día de los Derechos Humanos.'
+  };
+  if ($('historyToday')) $('historyToday').textContent = events[key] || 'Hoy también puede ser una fecha importante para descubrir. Explora la historia, la ciencia y la cultura de este día.';
+
+  // Inspiración original y prácticas simbólicas: no se atribuyen citas dudosas.
+  const thoughts = [
+    ['La calma también es fuerza','No necesitas tener todas las respuestas para dar el siguiente paso. A veces basta con avanzar con calma.','Hoy puedo avanzar a mi ritmo y reconocer mis pequeños logros.'],
+    ['Una cosa a la vez','La paciencia no detiene el camino: nos ayuda a recorrerlo con más conciencia.','Puedo elegir una prioridad y dedicarle mi atención.'],
+    ['La luz que compartes','Un gesto amable puede cambiar el tono de un día, incluso el propio.','Merezco tratarme con la misma amabilidad que ofrezco a los demás.'],
+    ['Volver a empezar','Cada amanecer ofrece una página nueva, aunque la historia continúe.','No necesito hacerlo perfecto; puedo comenzar desde donde estoy.']
+  ];
+  const symbols = [
+    ['ᛉ','Algiz','En algunas tradiciones rúnicas modernas se asocia con protección y resguardo.'],
+    ['☯','Yin y yang','Símbolo chino relacionado con la complementariedad y el equilibrio de fuerzas.'],
+    ['△','Triquetra','Nudo de tres puntas presente en arte celta; sus interpretaciones varían según la tradición.'],
+    ['✺','Mandala','Diseño geométrico contemplativo presente en tradiciones hinduistas y budistas.']
+  ];
+  const affirmations = thoughts.map(x=>x[2]);
+  const dailyIndex = Math.floor((Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())/86400000)) % thoughts.length;
+  const thought = thoughts[dailyIndex], symbol = symbols[dailyIndex];
+  if ($('dailyThoughtTitle')) $('dailyThoughtTitle').textContent=thought[0];
+  if ($('dailyThought')) $('dailyThought').textContent=thought[1];
+  if ($('dailyAffirmation')) $('dailyAffirmation').textContent=thought[2];
+  if ($('dailySymbol')) $('dailySymbol').textContent=symbol[0];
+  if ($('dailySymbolText')) $('dailySymbolText').textContent=symbol[1]+': '+symbol[2];
+  const grabovoi = ['519 7148','918 794 8181','481 2412','714 273 218'];
+  if ($('grabovoiNumber')) $('grabovoiNumber').textContent=grabovoi[dailyIndex];
+  if ($('grabovoiMeaning')) $('grabovoiMeaning').textContent='Número presentado como elemento de una práctica esotérica de intención. No existe evidencia científica de que estos códigos produzcan resultados o garanticen manifestaciones.';
+
+  // Clima: geocodificación y pronóstico público de Open-Meteo.
+  async function weather(city) {
+    $('weatherSummary').textContent='Buscando la ciudad…';
+    try {
+      const geo=await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=es&format=json`);
+      if(!geo.ok) throw new Error('No se pudo localizar la ciudad');
+      const gd=await geo.json(); const place=gd.results?.[0];
+      if(!place) throw new Error('No encontré esa ciudad. Prueba con otra escritura.');
+      const res=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto`);
+      if(!res.ok) throw new Error('No se pudo consultar el pronóstico');
+      const data=await res.json(), c=data.current;
+      const codes={0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',45:'Niebla',48:'Niebla con escarcha',51:'Llovizna ligera',53:'Llovizna',55:'Llovizna intensa',61:'Lluvia ligera',63:'Lluvia',65:'Lluvia intensa',71:'Nieve ligera',73:'Nieve',75:'Nieve intensa',80:'Chubascos',81:'Chubascos',82:'Chubascos fuertes',95:'Tormenta'};
+      $('weatherTemp').textContent=Math.round(c.temperature_2m)+'°C';
+      $('weatherSummary').textContent=`${codes[c.weather_code]||'Condición variable'} · Sensación ${Math.round(c.apparent_temperature)}°C · ${place.name}`;
+      $('weatherUpdated').textContent=`Humedad ${c.relative_humidity_2m}% · Viento ${Math.round(c.wind_speed_10m)} km/h · Open-Meteo`;
+    } catch(err) {$('weatherSummary').textContent=err.message;$('weatherUpdated').textContent='Revisa tu conexión e inténtalo de nuevo.';}
+  }
+  if($('cityButton')) $('cityButton').addEventListener('click',()=>weather($('cityInput').value.trim()||'Aguascalientes'));
+  if($('cityInput')) $('cityInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();weather($('cityInput').value.trim());}});
+  weather('Aguascalientes');
+
+  // Tareas guardadas únicamente en el navegador actual.
+  const TASK_KEY='lumi_personal_tasks_v1';
+  let tasks=[]; try{tasks=JSON.parse(localStorage.getItem(TASK_KEY)||'[]');if(!Array.isArray(tasks))tasks=[];}catch(e){tasks=[];}
+  function saveTasks(){try{localStorage.setItem(TASK_KEY,JSON.stringify(tasks));}catch(e){}}
+  function renderTasks(){
+    const list=$('taskList'); if(!list)return; list.replaceChildren();
+    if(!tasks.length){const li=document.createElement('li');li.className='empty-task';li.textContent='Tus ideas importantes tendrán aquí su espacio. ✨';list.append(li);return;}
+    tasks.forEach((task,i)=>{const li=document.createElement('li');if(task.done)li.classList.add('done');const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!task.done;cb.setAttribute('aria-label','Marcar tarea');cb.addEventListener('change',()=>{tasks[i].done=cb.checked;saveTasks();renderTasks();});const span=document.createElement('span');span.textContent=task.text;const del=document.createElement('button');del.type='button';del.textContent='×';del.setAttribute('aria-label','Eliminar tarea');del.addEventListener('click',()=>{tasks.splice(i,1);saveTasks();renderTasks();});li.append(cb,span,del);list.append(li);});
+  }
+  if($('taskForm')) $('taskForm').addEventListener('submit',e=>{e.preventDefault();const value=$('taskInput').value.trim();if(!value)return;tasks.unshift({text:value,done:false});saveTasks();$('taskInput').value='';renderTasks();});
+  renderTasks();
+
+  const music={
+    '60':['México y el mundo · década de 1960','The Beatles, The Supremes, José José y Los Ángeles Negros.','grandes exitos 1960s Beatles Jose Jose Los Angeles Negros'],
+    '70':['México y el mundo · década de 1970','ABBA, Queen, Juan Gabriel, José José y música disco.','musica exitos 1970 ABBA Queen Juan Gabriel'],
+    '80':['México y el mundo · década de 1980','Timbiriche, Madonna, Michael Jackson, Soda Stereo y rock en español.','musica exitos 1980 Mexico Madonna Soda Stereo'],
+    '90':['México y el mundo · década de 1990','Luis Miguel, Selena, Shakira, Maná y pop internacional.','musica exitos 1990 Mexico Selena Mana'],
+    '2000':['México y el mundo · década de 2000','Pop latino, rock alternativo y grandes éxitos internacionales.','musica exitos 2000 Mexico pop latino'],
+    'hoy':['Éxitos actuales','Las listas cambian según el país y la plataforma; consulta rankings actualizados.','exitos musicales actuales Mexico global']
+  };
+  document.querySelectorAll('[data-decade]').forEach(btn=>btn.addEventListener('click',()=>{const m=music[btn.dataset.decade];$('musicSuggestion').textContent=m[0]+': '+m[1];$('musicLink').href='https://www.youtube.com/results?search_query='+encodeURIComponent(m[2]);}));
+  const cartoons=['Heidi, Candy Candy y Remi: historias que marcaron generaciones.','Los Supersónicos, Don Gato y La Pantera Rosa: clásicos para viajar en el tiempo.','Avatar: La leyenda de Aang y Hora de Aventura: animación que conquistó nuevas generaciones.','Bluey y otras series recientes para descubrir en familia.'];
+  if($('cartoonButton')) $('cartoonButton').addEventListener('click',()=>{const c=cartoons[Math.floor(Math.random()*cartoons.length)];$('cartoonSuggestion').textContent=c;$('cartoonLink').href='https://www.youtube.com/results?search_query='+encodeURIComponent(c+' caricatura');});
+
+  // Investigar: envía el tema al chat existente, sin inventar resultados ni fuentes.
+  if($('researchForm')) $('researchForm').addEventListener('submit',e=>{e.preventDefault();const q=$('researchInput').value.trim();if(!q)return;const msg='Quiero investigar este tema: '+q+'. Ayúdame a distinguir hechos, opiniones y fuentes confiables.';if(typeof window.sendMessage==='function')window.sendMessage(msg);else{const field=$('messageInput');field.value=msg;$('chatForm').requestSubmit();}$('researchInput').value='';document.querySelector('.chat-card')?.scrollIntoView({behavior:'smooth'});});
+})();
