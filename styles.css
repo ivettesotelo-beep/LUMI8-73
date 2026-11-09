@@ -14,3 +14,8 @@
 .task-form{display:flex;gap:7px;margin-top:10px}.task-list{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:7px}.task-list li{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:12px;background:#ffffff0d;font-size:11px;color:#f1eaff}.task-list input{accent-color:#d9b5ff}.task-list .done span{text-decoration:line-through;opacity:.6}.task-list button{margin-left:auto;border:0;background:transparent;color:#ffc4e7;font-size:16px}.empty-task{color:#c9badf!important}.privacy-note{font-size:9px!important;color:#b9a9d1!important}
 .decade-buttons{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}.decade-buttons button{border:1px solid #cdb8f455;border-radius:20px;background:#ffffff12;color:white;padding:7px 10px;font-size:10px}.suggestion{min-height:48px}.explore-card a{color:#ffcae9;font-size:10px;text-decoration:none}.soft-button{margin:8px 0}.research-card{margin-bottom:12px}
 @media(max-width:380px){.dashboard-grid,.explore-grid{grid-template-columns:1fr}.universe-heading h2{font-size:20px}}
+
+/* Control para detener la voz y mantener las respuestas concisas */
+.voice-stop-row{display:flex;margin-top:7px}
+.stop-speaking{width:100%;border-color:#ffb6dc88;background:#ff9cda18;color:#ffe4f5}
+.stop-speaking:active{background:#ff9cda;color:#351b3c}
