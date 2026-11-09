@@ -10,6 +10,58 @@
 <section class="scene" aria-label="LUMI"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span>
 <div class="robot happy" id="robot"><div class="hood"></div><div class="face"><div class="head-sensor" id="sensor">♡</div><div class="eyes"><div class="eye"><span class="pupil"></span><i class="shine"></i></div><div class="eye"><span class="pupil"></span><i class="shine"></i></div></div><div class="nose"></div><div class="blush blush-left">///</div><div class="blush blush-right">///</div></div><div class="arm arm-left"></div><div class="arm arm-right"></div><div class="chest-heart">♥</div><div class="robot-name">LUMI</div><div class="shadow"></div></div><div class="mood-label" id="moodLabel">♡ Feliz de verte ♡</div></section>
 <section class="welcome"><h1 id="greeting">¡Qué bonito que estés aquí. El universo siempre encuentra formas maravillosas de regalarnos nuevos encuentros. 💜</h1><p id="reply">Mis lucecitas están encendidas. ¿Qué aventura tendremos hoy?</p><div class="quick-actions"><button class="chip" data-message="¡Cuéntame algo bonito!">✨ Algo bonito</button><button class="chip" data-message="Hazme reír, LUMI.">😂 Hazme reír</button><button class="chip" data-message="Dame una curiosidad del universo.">🌌 Curiosidad</button></div></section>
+
+<nav class="universe-nav" aria-label="Secciones de LUMI">
+  <a href="#mi-dia">Mi día</a><a href="#inspiracion">Inspiración</a><a href="#organizador">Organizador</a><a href="#explorar">Explorar</a>
+</nav>
+<section class="universe-heading">
+  <p class="eyebrow">TU ESPACIO PERSONAL</p><h2>Mi Universo Personal <span>✦</span></h2>
+  <p>Un rincón para descubrir, organizarte y llenar el día de pequeñas maravillas.</p>
+</section>
+<section class="dashboard-grid" id="mi-dia">
+  <article class="universe-card date-card">
+    <div class="card-kicker">✧ MI DÍA</div><h3 id="todayDate">Hoy</h3><p id="todayFullDate"></p>
+    <div class="mini-event"><strong>Un día como hoy</strong><span id="historyToday">Cargando efeméride…</span></div>
+  </article>
+  <article class="universe-card weather-card">
+    <div class="card-kicker">☼ CLIMA</div><h3 id="weatherTemp">--°</h3><p id="weatherSummary">Consultando el cielo…</p>
+    <label for="cityInput">Ciudad</label><div class="inline-form"><input id="cityInput" value="Aguascalientes" maxlength="60"><button id="cityButton" type="button">Ver</button></div>
+    <small id="weatherUpdated">Pronóstico de Open-Meteo</small>
+  </article>
+</section>
+<section class="universe-card inspiration-card" id="inspiracion">
+  <div class="card-kicker">☾ INSPIRACIÓN DEL DÍA</div><h3 id="dailyThoughtTitle">Una pausa para el alma</h3>
+  <p id="dailyThought">No necesitas tener todas las respuestas para dar el siguiente paso. A veces basta con avanzar con calma.</p>
+  <div class="inspiration-columns">
+    <div><span class="mini-label">AFIRMACIÓN</span><p id="dailyAffirmation">Hoy puedo avanzar a mi ritmo y reconocer mis pequeños logros.</p></div>
+    <div><span class="mini-label">SÍMBOLO DEL DÍA</span><div class="symbol-mark" id="dailySymbol">ᛉ</div><p id="dailySymbolText">Algiz: runa asociada tradicionalmente con protección y resguardo.</p></div>
+  </div>
+  <div class="grabovoi"><span class="mini-label">NÚMERO GRABOVOI DEL DÍA · PRÁCTICA ESOTÉRICA</span><strong id="grabovoiNumber">519 7148</strong><p id="grabovoiMeaning">En esta práctica se asocia con bienestar y equilibrio. Es una creencia espiritual, no un método científicamente demostrado.</p></div>
+</section>
+<section class="universe-card" id="organizador">
+  <div class="card-kicker">✦ ORGANIZADOR PERSONAL</div><h3>Mis pendientes</h3>
+  <form id="taskForm" class="task-form"><input id="taskInput" maxlength="120" placeholder="Escribe una tarea o idea…" aria-label="Nueva tarea"><button type="submit">Agregar</button></form>
+  <ul id="taskList" class="task-list"><li class="empty-task">Tus ideas importantes tendrán aquí su espacio. ✨</li></ul>
+  <p class="privacy-note">Tus tareas se guardan en este navegador, en este dispositivo. No se sincronizan con otros equipos.</p>
+</section>
+<section class="explore-grid" id="explorar">
+  <article class="universe-card explore-card"><div class="card-kicker">🎵 VIAJE MUSICAL</div><h3>Un viaje por las décadas</h3>
+    <p>Explora música de México y del mundo. Selecciona una época para descubrir artistas y canciones.</p>
+    <div class="decade-buttons"><button data-decade="60">60</button><button data-decade="70">70</button><button data-decade="80">80</button><button data-decade="90">90</button><button data-decade="2000">2000</button><button data-decade="hoy">Hoy</button></div>
+    <p id="musicSuggestion" class="suggestion">Elige una década para comenzar.</p><a id="musicLink" href="https://www.youtube.com/results?search_query=grandes+exitos+musica+Mexico" target="_blank" rel="noopener">Escuchar en YouTube ↗</a>
+  </article>
+  <article class="universe-card explore-card"><div class="card-kicker">📺 MÁQUINA DEL TIEMPO</div><h3>Caricaturas</h3>
+    <p id="cartoonSuggestion">De la nostalgia a los estrenos: una pequeña vuelta por la animación.</p>
+    <button id="cartoonButton" type="button" class="soft-button">Sorpréndeme</button>
+    <a id="cartoonLink" href="https://www.youtube.com/results?search_query=caricaturas+clasicas" target="_blank" rel="noopener">Buscar episodios y recuerdos ↗</a>
+  </article>
+</section>
+<section class="universe-card research-card">
+  <div class="card-kicker">🔎 INVESTIGAR Y APRENDER</div><h3>¿Qué exploramos hoy?</h3>
+  <p>Escribe una pregunta y LUMI la recibirá en el chat para ayudarte a desarrollarla.</p>
+  <form id="researchForm" class="task-form"><input id="researchInput" maxlength="300" placeholder="Tengo curiosidad por…" aria-label="Tema para investigar"><button type="submit">Explorar</button></form>
+</section>
+
 <section class="chat-card"><div class="chat-title">💬 Habla conmigo</div><div class="chat-log" id="chatLog" aria-live="polite"><div class="bubble lumi-bubble">¡Bip bip! En esta versión tengo más ocurrencias y procuraré no repetirme. 💜</div></div>
 <form id="chatForm" class="composer"><input id="messageInput" type="text" placeholder="Escríbele algo a LUMI..." autocomplete="off" maxlength="400" aria-label="Mensaje para LUMI"><button type="submit" aria-label="Enviar">➤</button></form>
 <div class="voice-row"><button id="micButton" class="voice-button">🎙️ Hablar con LUMI</button><button id="voiceToggle" class="voice-button active" aria-pressed="true">🔊 Voz activada</button></div>
